@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>信息收集</title>
+  <script>
+    function collectUserInfo() {
+      // 获取用户设备信息
+      const userAgent = navigator.userAgent;
+      const screenWidth = screen.width;
+      const screenHeight = screen.height;
+      const language = navigator.language;
+
+      // 获取 IP（需调用免费 API）
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          const ip = data.ip;
+
+          // 构造数据对象
+          const userInfo = {
+            userAgent,
+            screenWidth,
+            screenHeight,
+            language,
+            ip,
+            timestamp: new Date().toISOString()
+          };
+
+          // 存储到 localStorage（仅限当前浏览器）
+          localStorage.setItem('userData', JSON.stringify(userInfo));
+
+          // 显示数据（可手动复制）
+          document.getElementById('result').innerText = JSON.stringify(userInfo, null, 2);
+        });
+    }
+
+    // 页面加载时自动收集
+    window.onload = collectUserInfo;
+  </script>
+</head>
+<body>
+  <h1>用户信息收集（无服务器）</h1>
+  <p>您的设备信息如下（刷新页面会更新数据）：</p>
+  <pre id="result"></pre>
+  <p>已经记录你的所有信息，回传到对应的服务器</p>
+</body>
+</html>
